@@ -1,10 +1,12 @@
 const express = require("express");
 const app = express();
+const cors = require('cors')
 const db = require("./models");
 const initRoutes = require("./routes/file");
 
 global.__basedir = __dirname;
 
+app.use(cors())
 app.use(express.urlencoded({ extended: true }));
 initRoutes(app);
 

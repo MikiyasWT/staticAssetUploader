@@ -9,7 +9,7 @@ let routes = (app) => {
   router.get('/',uploadController.getListFiles);
   router.post("/upload", upload.single("file"), uploadController.uploadFiles);
   router.delete("/:name", uploadController.removeFile);
-  app.use("/", router);
+  app.use("/api", router);
 };
 
 module.exports = routes;
