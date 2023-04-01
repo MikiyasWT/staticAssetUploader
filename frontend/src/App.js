@@ -11,15 +11,17 @@ const apiUrl = 'http://localhost:8000/api/'
 function App() {
   const [data, setData] = useState([]); 
   const [file, setFile] = useState()
-
+  const [update,setUpdate] = useState(false); 
   const removeFile = (file) => {
     const {name} = file;
-    return fetch(apiUrl+`/${file.name}`, {method: "DELETE",
+     fetch(apiUrl+`/${file.name}`, {method: "DELETE",
      headers: {
         'Accept': 'application/json, text/plain, */*',
         'Content-Type': 'application/json'
       }, 
      }).then(response => response.json().catch(error => error));
+
+     return setUpdate((prev)=> !prev)
   }
 
 
@@ -43,6 +45,8 @@ function App() {
       console.log(response.data);
     });
 
+    return setUpdate((prev)=> !prev);
+
   }
 
 
@@ -53,14 +57,18 @@ function App() {
           .catch(err => err)
      
      console.log(data)   
- },[])
+ },[update])
  return(
   <>
-        <form onSubmit={handleSubmit}>
+
+  <FormWrapper>
+    <form onSubmit={handleSubmit}>
           
           <input name="file" type="file" onChange={handleChange}/>
           <button type="submit">Upload</button>
-        </form>
+    </form>
+  </FormWrapper>
+
   <TableWrapper>
    <table>
     <thead>
@@ -173,4 +181,32 @@ export const FormButtons = styled.button`
   export const LoadingEffectConatiner = styled.div`
   position:absolute;
   left:40%;
+  `;
+
+  export const FormWrapper = styled.div`
+  width:100%;
+  margin:1rem 4rem;
+  form {
+    width:80%;
+    height:5rem;
+    margin:1rem 5rem;
+    padding:1rem 2rem;
+    
+
+    input {
+      width:90%;
+      padding:2rem 0rem;
+      font-size:2rem;
+      border-color:blue;
+      
+    }
+
+    button {
+      padding:1rem 1rem;
+      font-size:1.5rem;
+      border-color:blue;
+      background:blue;
+      color:white;
+    }
+  }
   `;

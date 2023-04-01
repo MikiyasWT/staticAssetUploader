@@ -10,10 +10,10 @@ app.use(cors())
 app.use(express.urlencoded({ extended: true }));
 initRoutes(app);
 
-//db.sequelize.sync();
-db.sequelize.sync({ force: true }).then(() => {
-  console.log("Drop and re-sync db.");
-});
+db.sequelize.sync();
+// db.sequelize.sync({ force: true }).then(() => {
+//   console.log("Drop and re-sync db.");
+// });
 
 db.sequelize
   .authenticate()
