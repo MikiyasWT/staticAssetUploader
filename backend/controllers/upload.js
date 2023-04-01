@@ -4,38 +4,48 @@ const db = require("../models");
 const File = db.files;
 const TenMegaBytes = 10 * 1024 * 1024;
 const baseUrl = "http://localhost:8000/files/";
-
+const uploadFile = require("../middleware/upload");
 
 const uploadFiles = async (req, res) => {
   try {
     console.log(req.file);
+    await uploadFile(req, res);
 
     if (req.file == undefined) {
-      return res.send(`You must select a file.`);
-    }
-    if(req.file.size > TenMegaBytes) {
-      return res.send(`file can exceed 10mb`);
+      return res.status(400).send({ message: "Please upload a file!" });
     }
 
-    File.create({
-      type: req.file.mimetype,
-      name: req.file.originalname,
-      data: fs.readFileSync(
-        __basedir + "/resources/static/assets/uploads/" + req.file.filename
-      ),
-    }).then((file) => {
-      fs.writeFileSync(
-        __basedir + "/resources/static/assets/tmp/" + file.name,
-        file.data
-      );
-
-      return res.send(`File has been uploaded.`);
+    res.status(200).send({
+      message: "Uploaded the file successfully: " + req.file.originalname,
     });
-  } catch (error) {
-    console.log(error);
-    return res.send(`Error when trying upload images: ${error}`);
+
+    // File.create({
+    //   type: req.file.mimetype,
+    //   name: req.file.originalname,
+    //   data: fs.readFileSync(
+    //     __basedir + "/resources/static/assets/uploads/" + req.file.originalname
+    //   ),
+    // }).then((file) => {
+    //   fs.writeFileSync(
+    //     __basedir + "/resources/static/assets/tmp/" + file.originalname,
+    //     file.data
+    //   );
+
+    //   return res.send(`File has been uploaded.`);
+    // });
+  } catch (err) {
+      if (err.code == "LIMIT_FILE_SIZE") {
+       return res.status(500).send({
+        message: "File size cannot be larger than 2MB!",
+      });
+    }
+
+    res.status(500).send({
+      message: `Could not upload the file: ${req.file.originalname}. ${err}`,
+    });
   }
 };
+
 
 
 

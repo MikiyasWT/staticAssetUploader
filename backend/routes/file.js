@@ -7,7 +7,7 @@ const upload = require("../middleware/upload");
 let routes = (app) => {
   //router.get("/", homeController.getHome);
   router.get('/',uploadController.getListFiles);
-  router.post("/upload", upload.single("file"), uploadController.uploadFiles);
+  router.post("/upload",  uploadController.uploadFiles);
   router.delete("/:name", uploadController.removeFile);
   app.use("/api", router);
 };
